@@ -1,0 +1,7 @@
+---
+
+- include: neutron_compute.yml
+
+- include: neutron_controller.yml
+
+- include: neutron_network.yml

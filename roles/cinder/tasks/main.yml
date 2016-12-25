@@ -1,0 +1,5 @@
+---
+
+- include: cinder_controller.yml
+
+- include: cinder_storage.yml

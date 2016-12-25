@@ -1,0 +1,183 @@
+---
+
+       - name: Create database for cinder
+         #mysql_db: db={{ db.db_name }} state=present
+         command: mysql -u {{ db_main.root_db_user }} -p{{db_main.root_db_password}} -e 'CREATE DATABASE {{ db.db_name }};'
+
+       - name: Create access to cinder database
+         template: src=../templates/grant_prev.j2 dest=/tmp/grant_prev.sh mode=0777
+
+       - name: Grant Permission
+         shell: ./grant_prev.sh chdir=/tmp/
+
+       - name: Create cinder user
+         command: 'openstack user create cinder --password {{ cinder.cinder_pass }}'
+
+       - name: Add the admin role
+         command: 'openstack role add --project service --user cinder admin'
+ 
+       - name: Create Cinder service
+         command: 'openstack service create --name cinder --description "OpenStack Block Storage" volume'
+
+       - name: Create Cinder service
+         command: 'openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2'
+
+       - name: Create endpoint for Block storage
+         command: 'openstack endpoint create --publicurl http://controller:8776/v2/%\(tenant_id\)s --internalurl http://controller:8776/v2/%\(tenant_id\)s --adminurl http://controller:8776/v2/%\(tenant_id\)s --region RegionOne volume'
+ 
+       - name: Create endpoint for v2 volume
+         command: 'openstack endpoint create --publicurl http://controller:8776/v2/%\(tenant_id\)s --internalurl http://controller:8776/v2/%\(tenant_id\)s --adminurl http://controller:8776/v2/%\(tenant_id\)s --region RegionOne volumev2'
+
+       - name: install packages
+         apt: name={{item}} state=present
+         with_items:
+             - cinder-api
+             - cinder-scheduler
+             - python-cinderclient
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=database
+                   option=connection
+                   value=mysql://{{db.db_name}}:{{db.openstack_dbpass}}@controller/cinder
+                   backup=yes
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=DEFAULT
+                   option=rpc_backend
+                   value=rabbit
+                   backup=yes
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=oslo_messaging_rabbit
+                   option=rabbit_userid
+                   value=openstack
+                   backup=yes
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=oslo_messaging_rabbit
+                   option=rabbit_password
+                   value={{rabbit.rabbit_pass}}
+                   backup=yes
+  
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=oslo_messaging_rabbit
+                   option=rabbit_host
+                   value=controller
+                   backup=yes
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=DEFAULT
+                   option=auth_strategy
+                   value=keystone
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   state=absent
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   state=present
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=auth_uri
+                   value=http://controller:5000
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=auth_url
+                   value=http://controller:35357
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=auth_plugin
+                   value=password
+                   backup=yes
+ 
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=project_domain_id
+                   value=default
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=user_domain_id
+                   value=default
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=project_name
+                   value=service
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=username
+                   value=cinder
+                   backup=yes
+
+       - name: Configure keystone_authtoken section
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=keystone_authtoken
+                   option=password
+                   value={{cinder.cinder_pass}}
+                   backup=yes
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=DEFAULT
+                   option=my_ip
+                   value={{ip.controller_ip}}
+                   backup=yes
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=oslo_concurrency
+                   option=lock_path
+                   value=/var/lock/cinder
+                   backup=yes 
+
+       - name: Configure conf file
+         ini_file: dest=/etc/cinder/cinder.conf
+                   section=DEFAULT
+                   option=verbose
+                   value=True
+                   backup=yes
+
+       - name: copy syncdb file
+         template: src=../files/dbsync.j2 dest=/tmp/dbsync.sh mode=0777
+
+       - name: sync database
+         shell: ./dbsync.sh chdir=/tmp/
+
+       - name: Restart the services
+         service: name={{item}} state=restarted
+         with_items:
+             - cinder-scheduler
+             - cinder-api
+
+       - name: Removing sqlite db file
+         file: path=/var/lib/cinder/cinder.sqlite state=absent
+

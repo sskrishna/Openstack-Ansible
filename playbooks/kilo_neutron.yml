@@ -1,0 +1,23 @@
+---
+   - name: Install Neutron
+
+     hosts: client_one
+
+     vars_files:
+       - ../group_vars/all
+       - ../group_vars/neutron
+
+     sudo: yes
+
+     environment:
+            OS_PROJECT_DOMAIN_ID: default
+            OS_USER_DOMAIN_ID: default
+            OS_PROJECT_NAME: admin
+            OS_PASSWORD: ADMIN_PASS
+            OS_AUTH_URL: http://controller:35357/v3
+            OS_USERNAME: admin
+            OS_TENANT_NAME: admin
+            OS_URL: http://controller:35357/v2.0
+     
+     roles:
+        - { role: ../roles/neutron }
