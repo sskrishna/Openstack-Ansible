@@ -1,8 +1,8 @@
 Ansible Kilo Installation on Ubuntu:
 
 - Required Nodes:
-    Ansible server  : 1 node
-    Openstack Nodes : 3 nodes
+    - Ansible server  : 1 node
+    - Openstack Nodes : 3 nodes
     
 - Directory structure:
     group_vars  : Variables needed for the installation
