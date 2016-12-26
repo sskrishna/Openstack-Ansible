@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "Started the installation of OpenStack"
 ansible-playbook -i inventory playbooks/env_setup.yml -vvvv
 
 ansible-playbook -i inventory playbooks/kilo_keystone.yml -vvvv
