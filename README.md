@@ -12,7 +12,7 @@ Ansible Kilo Installation on Ubuntu:
     - templates   : Jinja2(.j2 extension) templates to configure the files in nodes according to node type.
     - files       : Files need to be copied to a location in a nodeaasdf
     
- -  Openstack individual components installation:
+ - Openstack individual components installation:
       - Basic environment setup     : env_setup.yml
       - Keystone                    : kilo_keystone.yml
       - Glance                      : kilo_glance.yml
@@ -23,9 +23,8 @@ Ansible Kilo Installation on Ubuntu:
       - Neutron on network node     : kilo_neutron_network.yml
       - Cinder                      : kilo_cinder.yml
       - Horizon                     : kilo_horizon.yml
-      
-      
- -  How to run:
+         
+ - How to run:
       - Configure the openstack node names in "inventory/hosts" file.
       - Run the file "install.sh"
       
