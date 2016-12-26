@@ -17,12 +17,12 @@ Ansible Kilo Installation on Ubuntu:
     - Keystone: kilo_keystone.yml
     - Glance: kilo_glance.yml
     - Nova:
-        - Controller node: kilo_nova.yml
-        - Compute node: kilo_nova_compute.yml
+        -- Controller node: kilo_nova.yml
+        -- Compute node: kilo_nova_compute.yml
     - Neutron:
-        - Controller node: kilo_neutron.yml
-        - Compute node: kilo_neutron_compute.yml
-        - Network node: kilo_neutron_network.yml
+        -- Controller node: kilo_neutron.yml
+        -- Compute node: kilo_neutron_compute.yml
+        -- Network node: kilo_neutron_network.yml
     - Cinder: kilo_cinder.yml
     - Horizon: kilo_horizon.yml
          
