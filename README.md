@@ -16,7 +16,7 @@ Ansible Kilo Installation on Ubuntu:
       - Basic environment setup: env_setup.yml
       - Keystone: kilo_keystone.yml
       - Glance: kilo_glance.yml
-      
+      - bvlhbvbjklk
       - Nova:
         - Controller node: kilo_nova.yml
         - Compute node: kilo_nova_compute.yml
