@@ -5,29 +5,29 @@ Ansible Kilo Installation on Ubuntu:
     - Openstack Nodes : 3 nodes
     
 - Directory structure:
-    group_vars  : Variables needed for the installation
-    inventory   : Host addresses of openstack nodes(ip).
-    playbooks   : Ansible scripts to install openstack global services.
-    roles       : Ansible scripts to install openstack components. Each nested directory is belong to a component in openstack.
-    templates   : Jinja2(.j2 extension) templates to configure the files in nodes according to node type.
-    files       : Files need to be copied to a location in a node.
+    - group_vars  : Variables needed for the installation
+    - inventory   : Host addresses of openstack nodes(ip).
+    - playbooks   : Ansible scripts to install openstack global services.
+    - roles       : Ansible scripts to install openstack components. Each nested directory is belong to a component in openstack.
+    - templates   : Jinja2(.j2 extension) templates to configure the files in nodes according to node type.
+    - files       : Files need to be copied to a location in a node.
     
  -  Openstack individual components installation:
-      Basic environment setup     : env_setup.yml
-      Keystone                    : kilo_keystone.yml
-      Glance                      : kilo_glance.yml
-      Nova on controller node     : kilo_nova.yml
-      Nova on compute node        : kilo_nova_compute.yml
-      Neutron on controller node  : kilo_neutron.yml
-      Neutron on compute node     : kilo_neutron_compute.yml
-      Neutron on network node     : kilo_neutron_network.yml
-      Cinder                      : kilo_cinder.yml
-      Horizon                     : kilo_horizon.yml
+      - Basic environment setup     : env_setup.yml
+      - Keystone                    : kilo_keystone.yml
+      - Glance                      : kilo_glance.yml
+      - Nova on controller node     : kilo_nova.yml
+      - Nova on compute node        : kilo_nova_compute.yml
+      - Neutron on controller node  : kilo_neutron.yml
+      - Neutron on compute node     : kilo_neutron_compute.yml
+      - Neutron on network node     : kilo_neutron_network.yml
+      - Cinder                      : kilo_cinder.yml
+      - Horizon                     : kilo_horizon.yml
       
       
  -  How to run:
-      Configure the openstack node names in "inventory/hosts" file.
-      Run the file "install.sh"
+      - Configure the openstack node names in "inventory/hosts" file.
+      - Run the file "install.sh"
       
 
 
