@@ -10,7 +10,7 @@ Ansible Kilo Installation on Ubuntu:
     - playbooks   : Ansible scripts to install openstack global services.
     - roles       : Ansible scripts to install openstack components. Each nested directory is belong to a component in openstack.
     - templates   : Jinja2(.j2 extension) templates to configure the files in nodes according to node type.
-    - files       : Files need to be copied to a location in a nodeaasdf
+    - files       : Files need to be copied to a location in a nodes
     
 - Openstack individual components installation:
     - Basic environment setup: env_setup.yml
